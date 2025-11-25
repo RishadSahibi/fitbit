@@ -1,0 +1,52 @@
+<%- include('../partials/header') %>
+
+<div class="d-flex justify-content-between align-items-center mb-3">
+  <h2 class="m-0">Workouts</h2>
+  <a class="btn btn-success" href="/workouts/new"><i class="bi bi-plus-lg"></i> Add Workout</a>
+</div>
+
+<div class="row">
+  <% if (!workouts || workouts.length === 0) { %>
+    <div class="col-12">
+      <div class="alert alert-info">No workouts yet. Add your first!</div>
+    </div>
+  <% } %>
+
+  <% workouts.forEach(w => { %>
+    <div class="col-md-6">
+      <div class="card mb-3 shadow-sm">
+        <div class="card-body">
+          <h5 class="card-title mb-0"><%= w.title %></h5>
+          <div class="text-muted small mb-2"><%= new Date(w.date).toLocaleDateString() %></div>
+          <p class="mb-3"><strong><%= w.exercises?.length || 0 %></strong> exercise(s)</p>
+          <div class="d-flex gap-2">
+            <a href="/workouts/<%= w._id %>" class="btn btn-outline-primary btn-sm">View</a>
+            <a href="/workouts/<%= w._id %>/edit" class="btn btn-outline-secondary btn-sm">Edit</a>
+            <button class="btn btn-outline-danger btn-sm" data-bs-toggle="modal" data-bs-target="#del-<%= w._id %>">Delete</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Delete Modal -->
+    <div class="modal fade" id="del-<%= w._id %>" tabindex="-1" aria-hidden="true">
+      <div class="modal-dialog">
+        <form class="modal-content" action="/workouts/<%= w._id %>?_method=DELETE" method="POST">
+          <div class="modal-header">
+            <h5 class="modal-title">Delete Workout</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+          </div>
+          <div class="modal-body">
+            Delete "<strong><%= w.title %></strong>"? This cannot be undone.
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+            <button class="btn btn-danger">Delete</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  <% }) %>
+</div>
+
+<%- include('../partials/footer') %>

@@ -1,0 +1,71 @@
+<%- include('../partials/header') %>
+
+<h2 class="mb-3">Add Workout</h2>
+
+<form action="/workouts" method="POST" class="needs-validation" novalidate>
+  <div class="row g-3">
+    <div class="col-md-6">
+      <label class="form-label">Title</label>
+      <input name="title" class="form-control" required>
+      <div class="invalid-feedback">Title is required</div>
+    </div>
+    <div class="col-md-6">
+      <label class="form-label">Date</label>
+      <input name="date" type="date" class="form-control">
+    </div>
+  </div>
+
+  <div class="mt-3">
+    <label class="form-label">Notes</label>
+    <textarea name="notes" class="form-control" rows="3" placeholder="Optional notes..."></textarea>
+  </div>
+
+  <hr class="my-4">
+
+  <h5>Exercises</h5>
+  <p class="text-muted small">Add one or more exercises (name, sets, reps, weight).</p>
+
+  <div id="exercises">
+    <div class="row g-2 mb-2 ex-row">
+      <div class="col-md-5"><input name="ex-name" class="form-control" placeholder="Exercise name" required></div>
+      <div class="col-md-2"><input name="ex-sets" class="form-control" placeholder="Sets" type="number" min="1" required></div>
+      <div class="col-md-2"><input name="ex-reps" class="form-control" placeholder="Reps" type="number" min="1" required></div>
+      <div class="col-md-2"><input name="ex-weight" class="form-control" placeholder="Weight" type="number" min="0"></div>
+      <div class="col-md-1 d-grid"><button type="button" class="btn btn-danger remove-ex">-</button></div>
+    </div>
+  </div>
+
+  <button type="button" id="add-ex" class="btn btn-sm btn-outline-primary mb-3"><i class="bi bi-plus-lg"></i> Add Exercise</button>
+
+  <div>
+    <button class="btn btn-primary">Save Workout</button>
+    <a href="/workouts" class="btn btn-outline-secondary">Cancel</a>
+  </div>
+</form>
+
+<script>
+// tiny client-side validation + dynamic rows
+(() => {
+  const forms = document.querySelectorAll('.needs-validation');
+  Array.from(forms).forEach(form => {
+    form.addEventListener('submit', e => {
+      if (!form.checkValidity()) { e.preventDefault(); e.stopPropagation(); }
+      form.classList.add('was-validated');
+    }, false);
+  });
+})();
+document.getElementById('add-ex').addEventListener('click', function() {
+  const container = document.getElementById('exercises');
+  const row = container.querySelector('.ex-row').cloneNode(true);
+  row.querySelectorAll('input').forEach(i => i.value = '');
+  container.appendChild(row);
+});
+document.addEventListener('click', (e) => {
+  if (e.target.classList.contains('remove-ex')) {
+    const rows = document.querySelectorAll('.ex-row');
+    if (rows.length > 1) e.target.closest('.ex-row').remove();
+  }
+});
+</script>
+
+<%- include('../partials/footer') %>
