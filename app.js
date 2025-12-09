@@ -4,12 +4,14 @@ const path = require('path');
 const methodOverride = require('method-override');
 const bodyParser = require('body-parser');
 const session = require('express-session');
-const passport = require('./config/passport');
 require('dotenv').config();
+
 const connectDB = require('./config/db');
+const passport = require('passport');
+require('./config/passport');
 
 const app = express();
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 4000;
 
 // connect to DB
 connectDB()
@@ -23,9 +25,7 @@ app.set('views', path.join(__dirname, 'views'));
 // static
 app.use(express.static(path.join(__dirname, '..', 'public')));
 
-// ------------------------------
-// SESSION + PASSPORT MIDDLEWARE
-// ------------------------------
+
 app.use(
   session({
     secret: 'secret123',
@@ -47,9 +47,6 @@ app.use((req, res, next) => {
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(methodOverride('_method'));
 
-// ------------------------------
-// ROUTES
-// ------------------------------
 const authRouter = require('./routes/auth');
 const workoutsRouter = require('./routes/workouts');
 
